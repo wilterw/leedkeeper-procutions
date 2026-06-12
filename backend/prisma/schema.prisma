@@ -1,0 +1,98 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(uuid())
+  email         String   @unique
+  password      String
+  name          String
+  role          String   @default("CLIENT") // ADMIN or CLIENT
+  inmobiliaria  Inmobiliaria?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Inmobiliaria {
+  id                    String   @id @default(uuid())
+  userId                String   @unique
+  user                  User     @relation(fields: [userId], references: [id])
+  name                  String
+  companyName           String?
+  whatsappNumber        String?
+  xmlUrl                String?
+  agentTrainingPrompt   String?  
+  
+  // Subscription management
+  planType              String   @default("DEMO") // DEMO, PRO, PREMIUM
+  isActive              Boolean  @default(false)  // Admin must authorize
+  activatedAt           DateTime?
+  expiresAt             DateTime?
+  
+  // Anti-Abuse Tracking
+  registrationIp        String?
+  registrationFingerprint String?
+  
+  // API Keys per client
+  llmProvider           String?  // openai, openrouter, gemini
+  llmApiKey             String?
+  
+  // Service connection data
+  evolutionInstanceName String?  @unique
+  chatwootAccountId     String?
+  chatwootInboxId       String?
+  chatwootToken         String?
+  
+  // Strategy & Sequence (JSON as String for SQLite compatibility)
+  strategyConfig        String?  // { sequence: ['budget', 'zone', 'rooms'], tone: 'formal', handoverRule: 'human_needed' }
+  
+  properties            Property[]
+  workflowConfigs       WorkflowConfig[]
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}
+
+model Property {
+  id             String       @id @default(uuid())
+  externalId     String?      
+  inmobiliariaId String
+  inmobiliaria   Inmobiliaria @relation(fields: [inmobiliariaId], references: [id])
+  title          String
+  description    String?      
+  price          Float?
+  currency       String       @default("EUR")
+  location       String?
+  type           String?      
+  bedrooms       Int?
+  bathrooms      Int?
+  area           Float?
+  images         String?      
+  sourceUrl      String?
+  lastUpdate     DateTime     @default(now())
+}
+
+model WorkflowConfig {
+  id             String       @id @default(uuid())
+  inmobiliariaId String
+  inmobiliaria   Inmobiliaria @relation(fields: [inmobiliariaId], references: [id])
+  workflowType   String       // principal, registro, notificar, clasificar, mcp
+  n8nWorkflowId  String?
+  active         Boolean      @default(true)
+  config         String?      
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
+model SecurityLog {
+  id            String   @id @default(uuid())
+  ipAddress     String
+  fingerprint   String?
+  action        String   // REGISTER, LOGIN
+  email         String?
+  createdAt     DateTime @default(now())
+}
