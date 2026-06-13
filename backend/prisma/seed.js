@@ -4,20 +4,17 @@ const prisma = new PrismaClient();
 
 async function main() {
     const adminEmail = 'admin@econos.io';
-    const adminPassword = 'admin_password_123';
-    const hashedPassword = await bcrypt.hash(adminPassword, 10);
+    const adminPassword = await bcrypt.hash('SML123456', 10);
 
     const admin = await prisma.user.upsert({
         where: { email: adminEmail },
-        update: {
-            password: hashedPassword,
-            role: 'ADMIN'
-        },
+        update: {},
         create: {
             email: adminEmail,
-            password: hashedPassword,
+            password: adminPassword,
             name: 'Super Admin',
-            role: 'ADMIN'
+            role: 'ADMIN',
+            status: 'ACTIVE'
         }
     });
 
