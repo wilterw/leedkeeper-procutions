@@ -1,5 +1,5 @@
 [variables]
     NIXPACKS_NODE_VERSION = '20'
 
-[phases.setup]
-    nixPkgs = ['...', 'nodejs_20']
+[phases.install]
+    cmds = ['npm install'] # Cambiamos npm ci por npm install para ser más flexibles
