@@ -13,8 +13,7 @@ async function main() {
             email: adminEmail,
             password: adminPassword,
             name: 'Super Admin',
-            role: 'ADMIN',
-            status: 'ACTIVE'
+            role: 'ADMIN'
         }
     });
 
