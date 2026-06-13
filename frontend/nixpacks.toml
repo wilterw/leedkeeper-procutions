@@ -2,4 +2,10 @@
     NIXPACKS_NODE_VERSION = '20'
 
 [phases.install]
-    cmds = ['npm install'] # Cambiamos npm ci por npm install para ser más flexibles
+    cmds = ['npm install']
+
+[phases.build]
+    cmds = ['npm run build']
+
+[start]
+    cmd = 'caddy run --config /app/Caddyfile --adapter caddyfile'
