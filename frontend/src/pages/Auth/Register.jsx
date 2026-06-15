@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import api from '../../services/api';
-import { User, Mail, Lock, Building2, ArrowRight, Loader2, Sparkles, ShieldCheck } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { useAuth } from '../../context/AuthContext';
+import { UserPlus, Mail, Lock, User, Loader2, Sparkles, Rocket } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const Register = () => {
@@ -10,145 +9,130 @@ const Register = () => {
         name: '',
         email: '',
         password: '',
-        companyName: ''
     });
     const [loading, setLoading] = useState(false);
+    const { register } = useAuth();
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-
         try {
-            const fingerprint = navigator.userAgent + window.screen.width;
-
-            const response = await api.post('/auth/register', {
-                ...formData,
-                fingerprint
+            await register(formData);
+            toast.success('¡Inmobiliaria creada con éxito!', {
+                icon: '🚀',
+                style: {
+                    borderRadius: '1rem',
+                    background: '#1e293b',
+                    color: '#fff',
+                }
             });
-
-            toast.success(response.data.message);
-            navigate('/login');
+            navigate('/dashboard');
         } catch (error) {
-            const errorMsg = error.response?.data?.message || error.response?.data?.error || 'Error al registrarse';
-            toast.error(errorMsg);
+            toast.error(error.response?.data?.message || 'Error al crear la cuenta');
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="min-h-[calc(100vh-80px)] flex items-center justify-center px-4 relative overflow-hidden bg-slate-950 py-12">
-            {/* Ambient Atmosphere */}
-            <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-indigo-500/10 blur-[100px] rounded-full"></div>
-            <div className="absolute top-0 right-0 w-full h-full opacity-[0.02] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '60px 60px' }}></div>
+        <div className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden">
+            {/* Background Decor */}
+            <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-emerald-600/10 blur-[120px] rounded-full" />
+            <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-600/5 blur-[120px] rounded-full" />
 
-            <motion.div
-                initial={{ opacity: 0, scale: 0.98 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="glass-card w-full max-w-2xl p-8 md:p-12 relative z-10 border-white/10 shadow-2xl bg-slate-900/60 backdrop-blur-3xl"
-            >
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
-                    <div className="space-y-4">
-                        <div className="w-14 h-14 rounded-2xl bg-indigo-500/10 flex items-center justify-center border border-indigo-500/20 shadow-[0_0_15px_rgba(99,102,241,0.2)]">
-                            <Sparkles size={28} className="text-indigo-400" />
+            <div className="w-full max-w-md relative">
+                <div className="glass-panel p-8 md:p-10 shadow-2xl relative">
+                    <div className="text-center mb-8">
+                        <div className="inline-flex p-4 rounded-2xl bg-emerald-500/10 mb-6 group-hover:rotate-12 transition-transform duration-500">
+                            <Rocket className="w-8 h-8 text-emerald-400" />
                         </div>
-                        <h2 className="text-4xl font-black tracking-tighter uppercase italic">Nueva Terminal</h2>
-                        <p className="text-slate-500 font-bold uppercase tracking-[0.2em] text-[10px]">Registro de Inmobiliaria Certificada</p>
+                        <h1 className="text-3xl font-extrabold mb-2 bg-gradient-to-br from-white to-slate-400 bg-clip-text text-transparent">
+                            Crea tu Inmobiliaria
+                        </h1>
+                        <p className="text-slate-400 text-sm">Comienza a automatizar tus leads hoy mismo</p>
                     </div>
-                </div>
 
-                <form onSubmit={handleSubmit} className="space-y-8">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <form onSubmit={handleSubmit} className="space-y-5">
                         <div className="space-y-2">
-                            <label className="block text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Administrador</label>
+                            <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider ml-1">Nombre Inmobiliaria</label>
                             <div className="relative group">
-                                <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 group-focus-within:text-indigo-400 transition-colors" size={18} />
+                                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none group-focus-within:text-emerald-400 text-slate-500 transition-colors">
+                                    <User size={18} />
+                                </div>
                                 <input
                                     type="text"
-                                    required
-                                    className="input-field pl-12 h-14 bg-slate-950/50 border-white/5 focus:border-indigo-500/30 text-sm"
-                                    placeholder="Juan Pérez"
+                                    className="input-premium pl-12 focus:border-emerald-500/50 focus:ring-emerald-500/10"
+                                    placeholder="Ej: Inmuebles Elite"
                                     value={formData.name}
                                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                />
-                            </div>
-                        </div>
-                        <div className="space-y-2">
-                            <label className="block text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Nombre Inmobiliaria</label>
-                            <div className="relative group">
-                                <Building2 className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 group-focus-within:text-indigo-400 transition-colors" size={18} />
-                                <input
-                                    type="text"
                                     required
-                                    className="input-field pl-12 h-14 bg-slate-950/50 border-white/5 focus:border-indigo-500/30 text-sm"
-                                    placeholder="Real Estate Econos"
-                                    value={formData.companyName}
-                                    onChange={(e) => setFormData({ ...formData, companyName: e.target.value })}
                                 />
                             </div>
                         </div>
-                    </div>
 
-                    <div className="space-y-2">
-                        <label className="block text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Canal de Acceso (Email)</label>
-                        <div className="relative group">
-                            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 group-focus-within:text-indigo-400 transition-colors" size={18} />
-                            <input
-                                type="email"
-                                required
-                                className="input-field pl-12 h-14 bg-slate-950/50 border-white/5 focus:border-indigo-500/30 text-sm"
-                                placeholder="contacto@tuempresa.io"
-                                value={formData.email}
-                                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                            />
+                        <div className="space-y-2">
+                            <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider ml-1">Correo Profesional</label>
+                            <div className="relative group">
+                                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none group-focus-within:text-emerald-400 text-slate-500 transition-colors">
+                                    <Mail size={18} />
+                                </div>
+                                <input
+                                    type="email"
+                                    className="input-premium pl-12 focus:border-emerald-500/50 focus:ring-emerald-500/10"
+                                    placeholder="admin@tuinmuebles.com"
+                                    value={formData.email}
+                                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                    required
+                                />
+                            </div>
                         </div>
-                    </div>
 
-                    <div className="space-y-2">
-                        <label className="block text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Clave de Encriptación</label>
-                        <div className="relative group">
-                            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 group-focus-within:text-indigo-400 transition-colors" size={18} />
-                            <input
-                                type="password"
-                                required
-                                minLength={8}
-                                className="input-field pl-12 h-14 bg-slate-950/50 border-white/5 focus:border-indigo-500/30 text-sm"
-                                placeholder="Seguridad nivel militar"
-                                value={formData.password}
-                                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                            />
+                        <div className="space-y-2">
+                            <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider ml-1">Contraseña Segura</label>
+                            <div className="relative group">
+                                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none group-focus-within:text-emerald-400 text-slate-500 transition-colors">
+                                    <Lock size={18} />
+                                </div>
+                                <input
+                                    type="password"
+                                    className="input-premium pl-12 focus:border-emerald-500/50 focus:ring-emerald-500/10"
+                                    placeholder="Mínimo 8 caracteres"
+                                    value={formData.password}
+                                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                                    required
+                                />
+                            </div>
                         </div>
-                    </div>
 
-                    <div className="p-5 rounded-2xl bg-indigo-500/5 border border-indigo-500/10">
-                        <p className="text-[10px] text-slate-400 font-medium italic leading-relaxed">
-                            * Al registrarte, solicitas una licencia demo de 7 días. Cada cuenta está sujeta a revisión técnica por el comando de administración central.
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="btn-primary w-full !bg-emerald-600 hover:!bg-emerald-500 shadow-emerald-500/20"
+                        >
+                            <div className="flex items-center justify-center">
+                                {loading ? (
+                                    <Loader2 className="w-5 h-5 animate-spin" />
+                                ) : (
+                                    <>
+                                        <span className="mr-2">Crear Cuenta Gratis</span>
+                                        <Sparkles className="w-4 h-4" />
+                                    </>
+                                )}
+                            </div>
+                        </button>
+                    </form>
+
+                    <div className="mt-8 text-center border-t border-white/5 pt-6">
+                        <p className="text-slate-500 text-sm">
+                            ¿Ya tienes cuenta?{' '}
+                            <Link to="/login" className="text-emerald-400 hover:text-emerald-300 font-bold transition-colors">
+                                Inicia sesión aquí
+                            </Link>
                         </p>
                     </div>
-
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className="btn-primary w-full h-16 text-sm font-black uppercase tracking-[0.3em] flex items-center justify-center gap-4 active:scale-[0.98] transition-all shadow-2xl shadow-indigo-500/20"
-                    >
-                        {loading ? <Loader2 className="animate-spin text-white" size={24} /> : (
-                            <>
-                                Inicializar Cuenta <ArrowRight size={22} className="opacity-60" />
-                            </>
-                        )}
-                    </button>
-                </form>
-
-                <div className="mt-12 text-center">
-                    <p className="text-[10px] font-black text-slate-600 uppercase tracking-widest">
-                        ¿Ya formas parte del ecosistema?{' '}
-                        <Link to="/login" className="text-indigo-500 hover:text-indigo-400 transition-colors">
-                            Acceso de Usuario
-                        </Link>
-                    </p>
                 </div>
-            </motion.div>
+            </div>
         </div>
     );
 };

@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { Mail, Lock, ArrowRight, Loader2, Sparkles, ShieldCheck } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { LogIn, Mail, Lock, Loader2, Sparkles } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const Login = () => {
@@ -14,101 +13,125 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
         try {
-            const userData = await login(email, password);
-            toast.success('Acceso Autorizado');
-
-            // Redirección inteligente basada en rol
-            if (userData.role === 'ADMIN') {
-                navigate('/admin');
-            } else {
-                navigate('/dashboard');
-            }
+            const user = await login(email, password);
+            // Solo mostramos éxito si login no lanzó error
+            toast.success(`¡Bienvenido de nuevo, ${user.name}!`, {
+                icon: '👋',
+                style: {
+                    borderRadius: '1rem',
+                    background: '#1e293b',
+                    color: '#fff',
+                    border: '1px solid rgba(255,255,255,0.1)'
+                }
+            });
+            if (user.role === 'ADMIN') navigate('/admin');
+            else navigate('/dashboard');
         } catch (error) {
-            toast.error(typeof error === 'string' ? error : 'Error de autenticación');
+            toast.error(error.response?.data?.message || 'Credenciales incorrectas');
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="min-h-[calc(100vh-80px)] flex items-center justify-center px-4 relative overflow-hidden bg-slate-950">
-            {/* Signature Element: Dynamic Aura */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-indigo-500/10 blur-[120px] rounded-full animate-pulse pointer-events-none"></div>
-            <div className="absolute top-0 left-0 w-full h-full opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
+        <div className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden">
+            {/* Background Decor */}
+            <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-600/10 blur-[120px] rounded-full" />
+            <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-emerald-600/5 blur-[120px] rounded-full" />
 
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="glass-card w-full max-w-md p-10 relative z-10 border-white/10 shadow-2xl shadow-indigo-500/5 bg-slate-900/60 backdrop-blur-3xl"
-            >
-                <div className="flex justify-center mb-10">
-                    <div className="w-20 h-20 rounded-[2rem] bg-gradient-to-br from-indigo-500 to-cyan-400 flex items-center justify-center shadow-2xl shadow-indigo-500/20 rotate-3 hover:rotate-0 transition-transform duration-500">
-                        <ShieldCheck size={40} className="text-white" />
+            <div className="w-full max-w-md relative">
+                <div className="glass-panel p-8 md:p-10 shadow-2xl relative overflow-hidden group">
+                    {/* Top accent line */}
+                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-indigo-500 to-transparent opacity-50" />
+
+                    <div className="text-center mb-10">
+                        <div className="inline-flex p-4 rounded-2xl bg-indigo-500/10 mb-6 relative group-hover:scale-110 transition-transform duration-500">
+                            <LogIn className="w-8 h-8 text-indigo-400" />
+                            <Sparkles className="w-4 h-4 text-emerald-400 absolute -top-1 -right-1 animate-pulse" />
+                        </div>
+                        <h1 className="text-3xl font-extrabold mb-2 bg-gradient-to-br from-white to-slate-400 bg-clip-text text-transparent">
+                            Lead Keeper
+                        </h1>
+                        <p className="text-slate-400 text-sm">Tu aliado inteligente en ventas inmobiliarias</p>
+                    </div>
+
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                        <div className="space-y-2">
+                            <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider ml-1">
+                                Correo Electrónico
+                            </label>
+                            <div className="relative group">
+                                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none group-focus-within:text-indigo-400 text-slate-500 transition-colors">
+                                    <Mail size={18} />
+                                </div>
+                                <input
+                                    type="email"
+                                    className="input-premium pl-12"
+                                    placeholder="tu@email.com"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    required
+                                />
+                            </div>
+                        </div>
+
+                        <div className="space-y-2">
+                            <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider ml-1">
+                                Contraseña
+                            </label>
+                            <div className="relative group">
+                                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none group-focus-within:text-indigo-400 text-slate-500 transition-colors">
+                                    <Lock size={18} />
+                                </div>
+                                <input
+                                    type="password"
+                                    className="input-premium pl-12"
+                                    placeholder="••••••••"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    required
+                                />
+                            </div>
+                        </div>
+
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="btn-primary w-full group relative"
+                        >
+                            <div className="relative flex items-center justify-center">
+                                {loading ? (
+                                    <Loader2 className="w-5 h-5 animate-spin" />
+                                ) : (
+                                    <>
+                                        <span className="mr-2">Entrar al Panel</span>
+                                        <Sparkles className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                    </>
+                                )}
+                            </div>
+                        </button>
+                    </form>
+
+                    <div className="mt-8 text-center border-t border-white/5 pt-6">
+                        <p className="text-slate-500 text-sm">
+                            ¿No tienes cuenta?{' '}
+                            <Link to="/register" className="text-indigo-400 hover:text-indigo-300 font-bold transition-colors">
+                                Regístrate gratis
+                            </Link>
+                        </p>
                     </div>
                 </div>
 
-                <div className="text-center mb-10">
-                    <h2 className="text-4xl font-black mb-2 tracking-tighter uppercase italic">Bienvenido</h2>
-                    <p className="text-slate-500 font-bold uppercase tracking-[0.2em] text-[10px]">Identificación de Operador Requerida</p>
-                </div>
-
-                <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="space-y-2">
-                        <label className="block text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Email de Acceso</label>
-                        <div className="relative group">
-                            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 group-focus-within:text-indigo-400 transition-colors" size={18} />
-                            <input
-                                type="email"
-                                required
-                                className="input-field pl-12 h-14 bg-slate-950/50 border-white/5 focus:border-indigo-500/30 text-sm"
-                                placeholder="operador@leadkeeper.io"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
-                        </div>
+                {/* Floating elements for depth */}
+                <div className="hidden lg:block absolute -right-24 top-1/4 animate-float opacity-20">
+                    <div className="p-4 glass-card rounded-2xl">
+                        <div className="w-12 h-2 bg-indigo-500/30 rounded-full mb-2" />
+                        <div className="w-8 h-2 bg-slate-500/20 rounded-full" />
                     </div>
-
-                    <div className="space-y-2">
-                        <div className="flex justify-between items-center px-1">
-                            <label className="block text-[10px] font-black text-slate-500 uppercase tracking-widest">Código de Seguridad</label>
-                            <Link to="#" className="text-[10px] font-black text-indigo-500 uppercase tracking-widest hover:text-indigo-400 transition-colors">¿Olvido?</Link>
-                        </div>
-                        <div className="relative group">
-                            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 group-focus-within:text-indigo-400 transition-colors" size={18} />
-                            <input
-                                type="password"
-                                required
-                                className="input-field pl-12 h-14 bg-slate-950/50 border-white/5 focus:border-indigo-500/30 text-sm"
-                                placeholder="••••••••"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                            />
-                        </div>
-                    </div>
-
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className="btn-primary w-full h-14 text-sm font-black uppercase tracking-[0.2em] flex items-center justify-center gap-3 active:scale-[0.98] transition-all shadow-xl shadow-indigo-500/20"
-                    >
-                        {loading ? <Loader2 className="animate-spin text-white" size={24} /> : (
-                            <>
-                                Acceder al Sistema <ArrowRight size={20} />
-                            </>
-                        )}
-                    </button>
-                </form>
-
-                <div className="mt-12 pt-8 border-t border-white/5 text-center">
-                    <p className="text-[10px] font-black text-slate-600 uppercase tracking-widest">
-                        ¿Nueva Inmobiliaria?{' '}
-                        <Link to="/register" className="text-indigo-500 hover:text-indigo-400 transition-colors">
-                            Crear Terminal de Agente
-                        </Link>
-                    </p>
                 </div>
-            </motion.div>
+            </div>
         </div>
     );
 };
