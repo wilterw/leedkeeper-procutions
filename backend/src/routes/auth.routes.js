@@ -3,6 +3,8 @@ const router = express.Router();
 const { PrismaClient } = require('@prisma/client');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
+const { sendWelcomeEmail, sendResetPasswordEmail } = require('../services/email.service');
 const antiAbuseMiddleware = require('../middleware/antiAbuse.middleware');
 
 const prisma = new PrismaClient();
@@ -38,6 +40,9 @@ router.post('/register', antiAbuseMiddleware, async (req, res) => {
             },
             include: { inmobiliaria: true }
         });
+
+        // Enviar correo de bienvenida (async)
+        sendWelcomeEmail(user.email, user.name);
 
         const token = jwt.sign({ userId: user.id, role: user.role }, JWT_SECRET, { expiresIn: '24h' });
         res.status(201).json({
@@ -92,6 +97,52 @@ router.post('/login', async (req, res) => {
                 expiresAt: user.inmobiliaria?.expiresAt
             }
         });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Solicitar recuperación
+router.post('/forgot-password', async (req, res) => {
+    try {
+        const { email } = req.body;
+        const user = await prisma.user.findUnique({ where: { email } });
+        if (!user) return res.json({ message: 'Si el correo está registrado, recibirás un enlace pronto.' });
+
+        const token = crypto.randomBytes(32).toString('hex');
+        const expires = new Date(Date.now() + 3600000);
+
+        await prisma.user.update({
+            where: { email },
+            data: { resetPasswordToken: token, resetPasswordExpires: expires }
+        });
+
+        await sendResetPasswordEmail(user.email, token);
+        res.json({ message: 'Si el correo está registrado, recibirás un enlace pronto.' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Resetear contraseña
+router.post('/reset-password', async (req, res) => {
+    try {
+        const { token, newPassword } = req.body;
+        const user = await prisma.user.findFirst({
+            where: {
+                resetPasswordToken: token,
+                resetPasswordExpires: { gt: new Date() }
+            }
+        });
+        if (!user) return res.status(400).json({ error: 'Token inválido o expirado' });
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        await prisma.user.update({
+            where: { id: user.id },
+            data: { password: hashedPassword, resetPasswordToken: null, resetPasswordExpires: null }
+        });
+
+        res.json({ message: 'Contraseña actualizada con éxito' });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

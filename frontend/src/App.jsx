@@ -10,6 +10,8 @@ import AdminDashboard from './pages/Admin/AdminDashboard';
 import Pending from './pages/Auth/Pending';
 import ClientDashboard from './pages/Client/ClientDashboard';
 import ClientSettings from './pages/Client/ClientSettings';
+import ForgotPassword from './pages/Auth/ForgotPassword';
+import ResetPassword from './pages/Auth/ResetPassword';
 import { Toaster } from 'react-hot-toast';
 
 const ProtectedRoute = ({ children, requireAdmin = false }) => {
@@ -40,12 +42,14 @@ const ProtectedRoute = ({ children, requireAdmin = false }) => {
 function App() {
   return (
     <div className="min-h-screen">
-      <Navbar />
+      {window.location.pathname !== '/' && <Navbar />}
       <div className="pt-20">
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/pending" element={
             <ProtectedRoute>
               <Pending />

@@ -20,12 +20,12 @@ const Navbar = () => {
 
                 {/* Brand Identity */}
                 <Link to="/" className="flex items-center gap-3 group">
-                    <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-indigo-700 rounded-2xl flex items-center justify-center shadow-xl shadow-indigo-500/20 group-hover:rotate-12 transition-transform">
-                        <Box className="text-white" size={24} />
+                    <div className="w-10 h-10 bg-gradient-to-br from-brand-500 to-brand-700 rounded-2xl flex items-center justify-center shadow-xl shadow-brand-500/20 group-hover:rotate-12 transition-transform">
+                        <Bot className="text-white" size={24} />
                     </div>
                     <div className="flex flex-col">
                         <span className="text-xl font-black tracking-tighter uppercase italic bg-gradient-to-b from-white to-white/70 bg-clip-text text-transparent leading-none">Lead Keeper</span>
-                        <span className="hidden sm:block text-[10px] font-black uppercase tracking-[0.3em] text-indigo-400 mt-1">Autonomous Agent</span>
+                        <span className="hidden sm:block text-[10px] font-black uppercase tracking-[0.3em] text-brand-400 mt-1">Autonomous Agent</span>
                     </div>
                 </Link>
 
@@ -36,10 +36,10 @@ const Navbar = () => {
                             <div className="flex items-center gap-4 py-1.5 px-4 rounded-2xl bg-white/[0.03] border border-white/5 hover:bg-white/[0.05] transition-colors">
                                 <div className="text-right">
                                     <div className="text-xs font-black text-white uppercase tracking-tighter leading-none mb-1">{user.name}</div>
-                                    <div className="text-[10px] font-black uppercase tracking-widest text-indigo-500">{user.role} ACCESS</div>
+                                    <div className="text-[10px] font-black uppercase tracking-widest text-brand-500">{user.role} ACCESS</div>
                                 </div>
-                                <div className="w-9 h-9 rounded-full border-2 border-indigo-500/30 p-0.5 shadow-lg">
-                                    <div className="w-full h-full rounded-full bg-slate-800 flex items-center justify-center font-bold text-indigo-400 text-xs">
+                                <div className="w-9 h-9 rounded-full border-2 border-brand-500/30 p-0.5 shadow-lg">
+                                    <div className="w-full h-full rounded-full bg-slate-800 flex items-center justify-center font-bold text-brand-400 text-xs text-center">
                                         {user.name.charAt(0).toUpperCase()}
                                     </div>
                                 </div>
@@ -58,7 +58,7 @@ const Navbar = () => {
                     ) : (
                         <div className="flex items-center gap-6">
                             <Link to="/login" className="text-xs font-bold uppercase tracking-[0.2em] text-slate-400 hover:text-white transition-all">Entrar</Link>
-                            <Link to="/register" className="btn-primary py-3 px-8 text-xs">Registrar Terminal</Link>
+                            <Link to="/register" className="bg-white text-slate-950 px-6 py-2.5 rounded-full text-xs font-black hover:scale-105 transition-transform active:scale-95 shadow-lg shadow-white/10">Registrar Terminal</Link>
                         </div>
                     )}
                 </div>

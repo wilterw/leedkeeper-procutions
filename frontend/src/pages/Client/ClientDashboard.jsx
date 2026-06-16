@@ -13,7 +13,8 @@ import {
     Zap,
     LayoutDashboard,
     LogOut,
-    ChevronRight
+    ChevronRight,
+    Sparkles
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -91,8 +92,8 @@ const ClientDashboard = () => {
             title: 'Lanzamiento',
             desc: 'Sincronizar con Chatwoot',
             icon: Rocket,
-            color: 'text-indigo-400',
-            bg: 'bg-indigo-400/10',
+            color: 'text-brand-400',
+            bg: 'bg-brand-400/10',
             active: stats?.isReady,
             link: '/onboarding?step=launch'
         }
@@ -104,7 +105,7 @@ const ClientDashboard = () => {
     if (loading) return (
         <div className="min-h-screen bg-slate-950 flex items-center justify-center">
             <div className="flex flex-col items-center gap-4">
-                <div className="w-16 h-16 border-4 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin"></div>
+                <div className="w-16 h-16 border-4 border-brand-500/20 border-t-brand-500 rounded-full animate-spin"></div>
                 <p className="text-slate-400 animate-pulse font-medium">Sincronizando Cerebro...</p>
             </div>
         </div>
@@ -112,75 +113,77 @@ const ClientDashboard = () => {
 
     return (
         <div className="min-h-screen bg-slate-950 text-white pb-12">
+            {/* Background Decorations */}
+            <div className="fixed inset-0 overflow-hidden pointer-events-none">
+                <div className="absolute top-0 right-0 w-[50%] h-[50%] bg-brand-500/5 blur-[120px] rounded-full" />
+                <div className="absolute bottom-0 left-0 w-[50%] h-[50%] bg-accent-500/5 blur-[120px] rounded-full" />
+            </div>
+
             {/* Top Navbar */}
-            <nav className="glass-panel mx-6 mt-6 p-4 border-none shadow-xl flex items-center justify-between rounded-2xl">
+            <nav className="glass mx-6 mt-6 p-4 border shadow-xl flex items-center justify-between rounded-2xl relative z-10">
                 <div className="flex items-center gap-3">
-                    <div className="bg-indigo-500 p-2 rounded-xl">
-                        <LayoutDashboard className="w-5 h-5" />
+                    <div className="bg-brand-500 p-2 rounded-xl">
+                        <LayoutDashboard className="w-5 h-5 text-white" />
                     </div>
                     <div>
-                        <h2 className="font-bold text-lg hidden md:block">Lead Keeper</h2>
-                        <p className="text-xs text-slate-400 hidden md:block">{user?.name}</p>
+                        <h2 className="font-display font-black text-lg hidden md:block">Lead Keeper</h2>
+                        <p className="text-xs text-slate-400 hidden md:block font-bold uppercase tracking-wider">{user?.name}</p>
                     </div>
                 </div>
                 <div className="flex items-center gap-4">
-                    <div className="hidden sm:flex items-center gap-2 bg-slate-900 px-4 py-2 rounded-full border border-white/5">
+                    <div className="hidden sm:flex items-center gap-2 bg-white/5 px-4 py-2 rounded-full border border-white/5">
                         <div className={`w-2 h-2 rounded-full ${stats?.isReady ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
-                        <span className="text-xs font-semibold">{stats?.isReady ? 'SISTEMA ACTIVO' : 'ONBOARDING PENDIENTE'}</span>
+                        <span className="text-[10px] font-black tracking-widest">{stats?.isReady ? 'SISTEMA ACTIVO' : 'ONBOARDING PENDIENTE'}</span>
                     </div>
-                    <button onClick={handleLogout} className="p-2 hover:bg-white/5 rounded-full transition-colors text-slate-400 hover:text-white">
-                        <LogOut className="w-5 h-5" />
-                    </button>
                 </div>
             </nav>
 
-            <main className="max-w-7xl mx-auto px-6 mt-12 grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <main className="max-w-7xl mx-auto px-6 mt-12 grid grid-cols-1 lg:grid-cols-12 gap-8 relative z-10">
                 {/* Welcome Sidebar */}
                 <div className="lg:col-span-4 space-y-6">
-                    <div className="glass-panel p-8">
-                        <h1 className="text-4xl font-extrabold mb-4 leading-tight">
-                            Hola, <span className="text-indigo-400">{user?.name?.split(' ')[0]}</span>
+                    <div className="glass-card p-10 rounded-[40px]">
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-500/10 border border-brand-500/20 mb-6">
+                            <Sparkles size={12} className="text-brand-400" />
+                            <span className="text-[10px] font-black tracking-widest uppercase text-brand-300 italic">Panel de Control</span>
+                        </div>
+                        <h1 className="text-4xl font-black mb-4 leading-tight">
+                            Hola, <span className="text-brand-400">{user?.name?.split(' ')[0]}</span>
                         </h1>
-                        <p className="text-slate-400 mb-8">
-                            Estás a solo <span className="text-white font-bold">{5 - completedSteps} pasos</span> de tener tu asistente inmobiliaria operando al 100%.
+                        <p className="text-slate-400 mb-8 font-medium">
+                            Estás a solo <span className="text-white font-black">{5 - completedSteps} pasos</span> de tener tu asistente inmobiliaria operando al 100%.
                         </p>
 
                         <div className="space-y-4">
-                            <div className="flex justify-between text-sm font-bold mb-2">
-                                <span>Progreso General</span>
-                                <span className="text-indigo-400">{Math.round(progressPercent)}%</span>
+                            <div className="flex justify-between text-xs font-black uppercase tracking-widest mb-2">
+                                <span>Progreso</span>
+                                <span className="text-brand-400">{Math.round(progressPercent)}%</span>
                             </div>
-                            <div className="w-full h-3 bg-slate-900 rounded-full overflow-hidden border border-white/5 p-0.5">
+                            <div className="w-full h-3 bg-white/5 rounded-full overflow-hidden border border-white/5 p-0.5">
                                 <div
-                                    className="h-full bg-gradient-to-r from-indigo-500 to-emerald-500 rounded-full transition-all duration-1000 ease-out"
+                                    className="h-full bg-gradient-to-r from-brand-500 to-accent-500 rounded-full transition-all duration-1000 ease-out"
                                     style={{ width: `${progressPercent}%` }}
                                 />
                             </div>
                         </div>
                     </div>
 
-                    <div className="glass-panel p-6 overflow-hidden relative group">
-                        <div className="flex items-center gap-4 mb-4">
-                            <div className="bg-amber-500/10 p-3 rounded-2xl">
-                                <ShieldCheck className="w-6 h-6 text-amber-500" />
+                    <Link to="/settings" className="glass-card p-6 rounded-3xl flex items-center justify-between group">
+                        <div className="flex items-center gap-4">
+                            <div className="bg-white/5 p-3 rounded-2xl group-hover:bg-brand-500/10 transition-colors">
+                                <Users className="w-5 h-5 text-slate-400 group-hover:text-brand-400" />
                             </div>
-                            <div>
-                                <h3 className="font-bold">Acceso a Leads</h3>
-                                <p className="text-xs text-slate-400">Sincronización en tiempo real</p>
-                            </div>
+                            <span className="font-bold text-sm">Configuración de Cuenta</span>
                         </div>
-                        <button className="w-full py-3 bg-slate-900 hover:bg-slate-800 rounded-xl text-sm font-bold transition-all border border-white/5">
-                            Ver Historial de Leads
-                        </button>
-                    </div>
+                        <ChevronRight className="w-5 h-5 text-slate-600 group-hover:translate-x-1 transition-transform" />
+                    </Link>
                 </div>
 
                 {/* Action Center - 5 Steps */}
                 <div className="lg:col-span-8 space-y-6">
-                    <div className="flex items-center justify-between mb-2">
-                        <h3 className="text-xl font-bold flex items-center gap-2">
-                            <Zap className="w-5 h-5 text-indigo-400" />
-                            Pasos de Configuración
+                    <div className="flex items-center justify-between mb-4">
+                        <h3 className="text-xl font-black flex items-center gap-2 uppercase tracking-tight">
+                            <Zap className="w-5 h-5 text-brand-400" />
+                            Pasos de Activación
                         </h3>
                     </div>
 
@@ -189,7 +192,7 @@ const ClientDashboard = () => {
                             <Link
                                 to={step.link}
                                 key={step.id}
-                                className={`glass-card p-6 flex flex-col justify-between group h-full ${step.active ? 'border-emerald-500/30' : ''}`}
+                                className={`glass-card p-6 flex flex-col justify-between group h-full rounded-[32px] ${step.active ? 'border-emerald-500/30 bg-emerald-500/5' : ''}`}
                             >
                                 <div className="flex justify-between items-start mb-6">
                                     <div className={`${step.bg} p-4 rounded-2xl group-hover:scale-110 transition-transform duration-300`}>
@@ -200,36 +203,39 @@ const ClientDashboard = () => {
                                             Activo
                                         </div>
                                     ) : (
-                                        <div className="bg-slate-800 text-slate-500 text-[10px] font-black px-2 py-1 rounded-md uppercase tracking-widest">
+                                        <div className="bg-white/5 text-slate-500 text-[10px] font-black px-2 py-1 rounded-md uppercase tracking-widest border border-white/5">
                                             Pendiente
                                         </div>
                                     )}
                                 </div>
 
                                 <div>
-                                    <h4 className="text-lg font-bold mb-1 group-hover:text-indigo-400 transition-colors">
+                                    <h4 className="text-lg font-black mb-1 group-hover:text-brand-400 transition-colors">
                                         {idx + 1}. {step.title}
                                     </h4>
-                                    <p className="text-xs text-slate-400 mb-6">{step.desc}</p>
+                                    <p className="text-xs text-slate-400 mb-6 font-medium">{step.desc}</p>
 
-                                    <div className="flex items-center gap-2 text-xs font-bold text-slate-500 group-hover:text-white transition-colors">
-                                        <span>Configurar ahora</span>
-                                        <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                    <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-500 group-hover:text-white transition-colors">
+                                        <span>Configurar</span>
+                                        <ChevronRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
                                     </div>
                                 </div>
                             </Link>
                         ))}
                     </div>
 
-                    <div className="glass-panel p-6 bg-indigo-600/10 border-indigo-500/20">
-                        <div className="flex items-center gap-6">
-                            <div className="p-4 bg-indigo-500 rounded-2xl shadow-lg shadow-indigo-500/40 hidden sm:block">
-                                <Rocket className="w-8 h-8" />
+                    <div className="glass-card p-10 rounded-[40px] bg-brand-500/5 border-brand-500/20 relative overflow-hidden">
+                        <div className="absolute top-0 right-0 p-10 opacity-5 pointer-events-none">
+                            <Rocket size={120} className="text-brand-500" />
+                        </div>
+                        <div className="flex items-center gap-8 relative z-10">
+                            <div className="p-5 bg-brand-500 rounded-3xl shadow-2xl shadow-brand-500/40 hidden sm:block">
+                                <Rocket className="w-10 h-10 text-white" />
                             </div>
                             <div className="flex-1">
-                                <h3 className="text-xl font-bold mb-2">Asistente Integrada</h3>
-                                <p className="text-sm text-slate-400">
-                                    Una vez completes los 5 pasos, tu inmobiliaria tendrá un asistente IA en WhatsApp capaz de responder objeciones, agendar citas y calificar leads.
+                                <h3 className="text-2xl font-black mb-3 italic">IA de Ventas Autónoma</h3>
+                                <p className="text-sm text-slate-400 leading-relaxed font-medium">
+                                    Una vez completes los 5 pasos, tu inmobiliaria tendrá un agente IA en WhatsApp capaz de responder objeciones, agendar citas y calificar leads de forma 100% autónoma.
                                 </p>
                             </div>
                         </div>

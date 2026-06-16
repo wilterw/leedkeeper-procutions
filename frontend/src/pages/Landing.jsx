@@ -3,127 +3,211 @@ import {
     ArrowRight,
     Zap,
     ShieldCheck,
-    Smartphone,
     Brain,
     MessageSquare,
     Bot,
-    ChevronRight,
-    Globe,
-    Sparkles
+    Sparkles,
+    CheckCircle2,
+    BarChart3,
+    Clock,
+    MousePointer2
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Landing = () => {
     return (
-        <div className="min-h-screen bg-slate-950 text-slate-200 selection:bg-indigo-500/30 selection:text-white font-sans antialiased">
-
-            {/* Decorative Orbs */}
-            <div className="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none -z-10">
-                <div className="absolute -top-24 -left-24 w-96 h-96 bg-indigo-600/20 blur-[120px] rounded-full animate-pulse-slow"></div>
-                <div className="absolute top-1/2 -right-24 w-80 h-80 bg-emerald-600/10 blur-[100px] rounded-full"></div>
+        <div className="min-h-screen bg-slate-950 text-white selection:bg-brand-500/30">
+            {/* Background Decorations */}
+            <div className="fixed inset-0 overflow-hidden pointer-events-none">
+                <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-brand-500/10 blur-[120px] rounded-full animate-glow" />
+                <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-accent-500/5 blur-[120px] rounded-full animate-glow" style={{ animationDelay: '2s' }} />
+                <div className="absolute inset-0 bg-grid opacity-[0.03]" />
             </div>
 
             {/* Navigation */}
-            <nav className="fixed top-0 left-0 w-full z-50 px-6 py-4">
-                <div className="max-w-7xl mx-auto flex items-center justify-between glass-panel px-6 py-3 border-white/5 bg-slate-900/40">
-                    <div className="flex items-center gap-2">
-                        <div className="bg-indigo-600 p-1.5 rounded-lg">
-                            <Bot className="w-5 h-5 text-white" />
+            <nav className="fixed top-6 left-0 w-full z-50 px-6">
+                <div className="max-w-6xl mx-auto">
+                    <div className="glass px-6 py-4 rounded-3xl flex justify-between items-center shadow-2xl shadow-black/50">
+                        <div className="flex items-center gap-3 group cursor-pointer">
+                            <div className="bg-gradient-to-br from-brand-400 to-brand-600 p-2 rounded-xl group-hover:scale-110 transition-transform duration-500">
+                                <Bot size={22} className="text-white" />
+                            </div>
+                            <span className="font-display font-black text-xl tracking-tight">LEAD KEEPER</span>
                         </div>
-                        <span className="font-display font-bold text-lg tracking-tight text-white">Lead Keeper</span>
-                    </div>
-                    <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-400">
-                        <a href="#features" className="hover:text-white transition-colors">Características</a>
-                        <a href="#ia" className="hover:text-white transition-colors">Tecnología</a>
-                    </div>
-                    <div className="flex items-center gap-4">
-                        <Link to="/login" className="text-sm font-bold text-slate-300 hover:text-white transition-colors">Entrar</Link>
-                        <Link to="/register" className="bg-white text-slate-950 px-5 py-2 rounded-full text-sm font-bold hover:bg-indigo-50 transition-all shadow-lg shadow-white/5">
-                            Registrarse
-                        </Link>
+
+                        <div className="hidden md:flex items-center gap-10">
+                            <a href="#features" className="text-sm font-semibold text-slate-400 hover:text-white transition-colors">Funciones</a>
+                            <a href="#ia" className="text-sm font-semibold text-slate-400 hover:text-white transition-colors">Cerebro IA</a>
+                            <a href="#results" className="text-sm font-semibold text-slate-400 hover:text-white transition-colors">Resultados</a>
+                        </div>
+
+                        <div className="flex items-center gap-6">
+                            <Link to="/login" className="text-sm font-bold text-slate-300 hover:text-white transition-colors">Entrar</Link>
+                            <Link to="/register" className="bg-white text-slate-950 px-6 py-2.5 rounded-full text-sm font-black hover:scale-105 transition-transform active:scale-95 shadow-lg shadow-white/10">
+                                Empezar Gratis
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </nav>
 
             {/* Hero Section */}
-            <header className="relative pt-40 pb-24 px-6">
-                <div className="max-w-5xl mx-auto text-center space-y-8">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[10px] font-black uppercase tracking-widest text-indigo-400 animate-fade-in">
-                        <Sparkles className="w-3 h-3" />
-                        Vende más con Inteligencia Artificial
+            <header className="relative pt-44 pb-32 px-6 overflow-hidden">
+                <div className="max-w-5xl mx-auto text-center">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-500/10 border border-brand-500/20 mb-10 animate-reveal" style={{ animationDelay: '0.1s' }}>
+                        <Sparkles size={14} className="text-brand-400" />
+                        <span className="text-[10px] font-black tracking-[0.2em] uppercase text-brand-300">Inteligencia Autónoma Inmobiliaria</span>
                     </div>
 
-                    <h1 className="text-5xl md:text-7xl lg:text-8xl font-display font-black text-white leading-[0.95] tracking-tighter">
-                        EL FUTURO <br /> ES <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-emerald-400">AUTÓNOMO.</span>
+                    <h1 className="text-6xl md:text-8xl font-black leading-[0.9] tracking-tight mb-8 animate-reveal" style={{ animationDelay: '0.2s' }}>
+                        <span className="text-gradient">VENDE MÁS</span> <br />
+                        <span className="text-brand-gradient italic">SIN ESFUERZO.</span>
                     </h1>
 
-                    <p className="max-w-2xl mx-auto text-lg md:text-xl text-slate-400 font-medium leading-relaxed">
-                        Lead Keeper es la primera IA inmobiliaria que opera 24/7, califica prospectos y sincroniza tu inventario en tiempo real. No más leads perdidos.
+                    <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-12 leading-relaxed animate-reveal font-medium" style={{ animationDelay: '0.3s' }}>
+                        Transforma tu stock XML en un agente de ventas 24/7.
+                        Lead Keeper automatiza WhatsApp, califica leads y agenda citas mientras tú duermes.
                     </p>
 
-                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-                        <Link to="/register" className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-500 text-white px-8 py-4 rounded-2xl font-bold flex items-center justify-center gap-2 transition-all shadow-xl shadow-indigo-600/20 group">
-                            Iniciar Despliegue
-                            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-5 animate-reveal" style={{ animationDelay: '0.4s' }}>
+                        <Link to="/register" className="btn-premium group w-full sm:w-auto">
+                            Activar mi Agente IA
+                            <ArrowRight size={20} className="ml-2 group-hover:translate-x-1 transition-transform" />
                         </Link>
-                        <button className="w-full sm:w-auto px-8 py-4 bg-white/5 border border-white/10 rounded-2xl font-bold hover:bg-white/10 transition-all">
-                            Ver Demo
+                        <button className="btn-secondary w-full sm:w-auto group">
+                            <MousePointer2 size={18} className="mr-2 group-hover:rotate-12 transition-transform" />
+                            Ver Demo en Vivo
                         </button>
+                    </div>
+
+                    {/* Social Proof */}
+                    <div className="mt-20 pt-10 border-t border-white/5 animate-reveal" style={{ animationDelay: '0.5s' }}>
+                        <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-6">Integración Nativa con</p>
+                        <div className="flex flex-wrap justify-center items-center gap-8 opacity-40 grayscale hover:grayscale-0 transition-all duration-700">
+                            <span className="text-xl font-black">CHATWOOT</span>
+                            <span className="text-xl font-black">N8N</span>
+                            <span className="text-xl font-black">EVOLUTION API</span>
+                            <span className="text-xl font-black">WHATSAPP</span>
+                        </div>
                     </div>
                 </div>
             </header>
 
-            {/* Bento Grid Features */}
-            <section id="features" className="px-6 py-24 max-w-7xl mx-auto">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-                    <div className="md:col-span-2 glass-panel p-10 bg-gradient-to-br from-indigo-600/10 to-transparent border-white/10 group overflow-hidden relative">
-                        <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-indigo-500/10 blur-3xl rounded-full group-hover:scale-150 transition-transform duration-700"></div>
-                        <div className="bg-indigo-600 w-12 h-12 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-indigo-600/30">
-                            <MessageSquare className="text-white w-6 h-6" />
-                        </div>
-                        <h3 className="text-3xl font-display font-bold text-white mb-4">WhatsApp Nativo</h3>
-                        <p className="text-slate-400 text-lg leading-relaxed">Sus clientes no quieren descargar apps. Quieren hablar por donde ya están. Nuestra IA se integra directamente en sus chats.</p>
+            {/* Features - Bento Grid */}
+            <section id="features" className="py-32 px-6 relative">
+                <div className="max-w-6xl mx-auto">
+                    <div className="text-center mb-20">
+                        <h2 className="text-4xl md:text-5xl font-black mb-4">Potencia Cognitiva</h2>
+                        <p className="text-slate-400">Todo lo que necesitas para escalar tu inmobiliaria al siguiente nivel.</p>
                     </div>
 
-                    <div className="glass-panel p-10 border-white/10 bg-slate-900/50 hover:border-emerald-500/30 transition-all">
-                        <div className="bg-emerald-600 w-12 h-12 rounded-2xl flex items-center justify-center mb-6">
-                            <Zap className="text-white w-6 h-6" />
-                        </div>
-                        <h3 className="text-2xl font-display font-bold text-white mb-4">Respuesta Instantánea</h3>
-                        <p className="text-slate-400">Reduce el tiempo de respuesta de horas a milisegundos. La IA nunca duerme.</p>
-                    </div>
-
-                    <div className="glass-panel p-10 border-white/10 bg-slate-900/50">
-                        <div className="bg-slate-700 w-12 h-12 rounded-2xl flex items-center justify-center mb-6">
-                            <Brain className="text-white w-6 h-6" />
-                        </div>
-                        <h3 className="text-2xl font-display font-bold text-white mb-4">Entrenamiento XML</h3>
-                        <p className="text-slate-400">Sube tu inventario y la IA conocerá cada detalle de tus propiedades al instante.</p>
-                    </div>
-
-                    <div className="md:col-span-2 glass-panel p-10 bg-slate-900/80 border-white/10 flex flex-col md:flex-row items-center gap-8">
-                        <div className="flex-1 space-y-4">
-                            <h3 className="text-3xl font-display font-bold text-white">Infraestructura Crítica</h3>
-                            <p className="text-slate-400 leading-relaxed">Conectamos EvolutionAPI, Chatwoot y n8n en una sola consola de mando diseñada para el alto rendimiento inmobiliario.</p>
-                            <div className="flex gap-4 pt-2">
-                                <div className="px-3 py-1 bg-white/5 rounded-lg border border-white/5 text-[10px] font-bold text-slate-500">v4.0 STABLE</div>
-                                <div className="px-3 py-1 bg-emerald-500/10 rounded-lg border border-emerald-500/20 text-[10px] font-bold text-emerald-500 uppercase tracking-widest">ONLINE</div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        {/* Main Feature - Large */}
+                        <div className="md:col-span-2 glass-card p-10 rounded-[40px] flex flex-col justify-between overflow-hidden relative group">
+                            <div className="absolute top-0 right-0 p-12 opacity-5 pointer-events-none group-hover:opacity-10 transition-opacity">
+                                <MessageSquare size={200} className="text-brand-500" />
+                            </div>
+                            <div className="relative z-10">
+                                <div className="bg-brand-500/10 p-4 rounded-2xl w-fit mb-8">
+                                    <MessageSquare size={32} className="text-brand-400" />
+                                </div>
+                                <h3 className="text-3xl font-black mb-4">WhatsApp Nativo 24/7</h3>
+                                <p className="text-slate-400 text-lg max-w-md">
+                                    No es un simple bot. Es un agente que entiende emociones, maneja objeciones complejas y utiliza el tono de voz de tu marca inmobiliaria.
+                                </p>
+                            </div>
+                            <div className="mt-12 flex items-center gap-4 relative z-10">
+                                <div className="flex -space-x-2">
+                                    {[1, 2, 3].map(i => (
+                                        <div key={i} className="w-8 h-8 rounded-full border-2 border-slate-950 bg-slate-800" />
+                                    ))}
+                                </div>
+                                <span className="text-xs font-bold text-slate-500">+500 conversaciones hoy</span>
                             </div>
                         </div>
-                        <div className="w-full md:w-48 h-48 bg-indigo-500/10 rounded-3xl border border-indigo-500/20 flex items-center justify-center">
-                            <ShieldCheck className="w-20 h-20 text-indigo-400 opacity-50" />
+
+                        {/* Secondary Feature 1 */}
+                        <div className="glass-card p-10 rounded-[40px] border-b-4 border-accent-500/30">
+                            <div className="bg-accent-500/10 p-4 rounded-2xl w-fit mb-8">
+                                <Brain size={32} className="text-accent-400" />
+                            </div>
+                            <h3 className="text-2xl font-black mb-4">Cerebro XML</h3>
+                            <p className="text-slate-400 text-sm leading-relaxed">
+                                Sincroniza tus portales. La IA conoce cada metro cuadrado de tu inventario y lo recomienda de forma inteligente.
+                            </p>
+                        </div>
+
+                        {/* Secondary Feature 2 */}
+                        <div className="glass-card p-10 rounded-[40px] border-b-4 border-brand-400/30">
+                            <div className="bg-brand-400/10 p-4 rounded-2xl w-fit mb-8">
+                                <Zap size={32} className="text-brand-400" />
+                            </div>
+                            <h3 className="text-2xl font-black mb-4">Calificación Real</h3>
+                            <p className="text-slate-400 text-sm leading-relaxed">
+                                Filtra curiosos de compradores reales. Entrega a tus asesores solo leads listos para visitar la propiedad.
+                            </p>
+                        </div>
+
+                        {/* Secondary Feature 3 - Wide */}
+                        <div className="md:col-span-2 glass-card p-10 rounded-[40px] flex items-center gap-10">
+                            <div className="hidden sm:block bg-brand-500/5 p-10 rounded-[32px]">
+                                <ShieldCheck size={64} className="text-brand-500" />
+                            </div>
+                            <div>
+                                <h3 className="text-2xl font-black mb-4">Blindaje Tecnológico</h3>
+                                <p className="text-slate-400 text-sm leading-relaxed">
+                                    Infraestructura basada en n8n + Chatwoot. Estabilidad garantizada del 99.9% para que nunca pierdas una oportunidad de venta.
+                                </p>
+                            </div>
                         </div>
                     </div>
+                </div>
+            </section>
 
+            {/* Dashboard Preview / CTA */}
+            <section className="py-20 px-6">
+                <div className="max-w-5xl mx-auto glass rounded-[48px] p-12 text-center relative overflow-hidden border-brand-500/20">
+                    <div className="absolute inset-0 bg-brand-500/5 pointer-events-none" />
+                    <h2 className="text-4xl md:text-5xl font-black mb-8 relative z-10">
+                        ¿Listo para dominar <br /> el mercado?
+                    </h2>
+                    <p className="text-slate-400 mb-12 max-w-xl mx-auto relative z-10 font-medium">
+                        Únete a las inmobiliarias que ya están escalando sus ventas con Inteligencia Artificial Autónoma.
+                    </p>
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-6 relative z-10">
+                        <Link to="/register" className="btn-premium px-12 group">
+                            Empezar Demo Gratis
+                            <ArrowRight size={20} className="ml-2 group-hover:translate-x-1 transition-transform" />
+                        </Link>
+                        <div className="flex items-center gap-2 text-sm font-bold text-slate-500">
+                            <CheckCircle2 size={16} className="text-accent-500" />
+                            Configuración en 15 minutos
+                        </div>
+                    </div>
                 </div>
             </section>
 
             {/* Footer */}
-            <footer className="px-6 py-12 border-t border-white/5 text-center">
-                <p className="text-slate-600 text-sm font-medium">© 2026 Lead Keeper. La IA definitiva para el sector inmobiliario.</p>
-            </footer>
+            <footer className="py-20 px-6 border-t border-white/5 relative bg-black/20">
+                <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
+                    <div className="flex items-center gap-3">
+                        <div className="bg-slate-800 p-2 rounded-xl">
+                            <Bot size={20} className="text-white" />
+                        </div>
+                        <span className="font-display font-black text-lg tracking-tight uppercase">LEAD KEEPER</span>
+                    </div>
 
+                    <div className="flex gap-10">
+                        <a href="#" className="text-xs font-bold text-slate-500 hover:text-white transition-colors">POLÍTICA</a>
+                        <a href="#" className="text-xs font-bold text-slate-500 hover:text-white transition-colors">TÉRMINOS</a>
+                        <a href="#" className="text-xs font-bold text-slate-500 hover:text-white transition-colors">SOPORTE</a>
+                    </div>
+
+                    <p className="text-[10px] font-black text-slate-600 uppercase tracking-widest">
+                        © 2026 LEAD KEEPER. INGENIERÍA PARA INMOBILIARIAS.
+                    </p>
+                </div>
+            </footer>
         </div>
     );
 };
