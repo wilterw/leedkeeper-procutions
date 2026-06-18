@@ -8,7 +8,7 @@ const api = axios.create({
     baseURL: EVOLUTION_URL,
     headers: {
         'Content-Type': 'application/json',
-        'apikey': EVOLUTION_API_KEY
+        'apikey': EVOLUTION_API_KEY.trim()
     }
 });
 
@@ -27,7 +27,10 @@ const evolutionService = {
             });
             return response.data;
         } catch (error) {
-            console.error('❌ Error EvolutionAPI (createInstance):', error.response?.status, error.config?.url);
+            console.error('❌ Error EvolutionAPI (createInstance):',
+                error.response?.status,
+                JSON.stringify(error.response?.data || {})
+            );
             throw error;
         }
     },
