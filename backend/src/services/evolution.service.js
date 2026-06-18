@@ -19,9 +19,10 @@ const evolutionService = {
      */
     async createInstance(instanceName) {
         try {
-            console.log(`📡 Solicitando creación de instancia: ${instanceName} en ${EVOLUTION_URL}`);
             const response = await api.post('/instance/create', {
-                instanceName: instanceName
+                instanceName: instanceName,
+                token: `tk_${Math.random().toString(36).substring(7)}`,
+                qrcode: true
             });
             return response.data;
         } catch (error) {
