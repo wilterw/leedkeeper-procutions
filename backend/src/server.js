@@ -33,10 +33,19 @@ app.use(morgan('dev'));
 app.use(express.json());
 
 // Routes
-app.get('/', (req, res) => {
+app.get('/', async (req, res) => {
+    let dbStatus = 'UNKNOWN';
+    try {
+        await prisma.$queryRaw`SELECT 1`;
+        dbStatus = 'CONNECTED';
+    } catch (e) {
+        dbStatus = 'ERROR: ' + e.message;
+    }
+
     res.json({
         message: 'Lead Keeper API is running',
         status: 'UP',
+        database: dbStatus,
         version: '1.0.0'
     });
 });
