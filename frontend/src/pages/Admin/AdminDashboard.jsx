@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../services/api';
-import { Users, CheckCircle, XCircle, Clock, Search, ShieldCheck, Activity, ArrowUpRight, Filter, Mail, Building2, User, LogOut } from 'lucide-react';
+import { Users, CheckCircle, XCircle, Clock, Search, ShieldCheck, Activity, ArrowUpRight, Filter, Mail, Building2, User, LogOut, Key } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 
@@ -59,6 +59,20 @@ const AdminDashboard = () => {
             fetchClients();
         } catch (error) {
             toast.error(error.response?.data?.error || 'Error al crear usuario');
+        }
+    };
+
+    const handleChangePassword = async (userId) => {
+        const newPassword = window.prompt('Introduce la nueva contraseña para este usuario:');
+        if (!newPassword || newPassword.length < 6) {
+            toast.error('Contraseña inválida (mínimo 6 caracteres)');
+            return;
+        }
+        try {
+            await api.post('/admin/change-password', { userId, newPassword });
+            toast.success('Contraseña cambiada con éxito');
+        } catch (error) {
+            toast.error('Fallo al cambiar la contraseña');
         }
     };
 
@@ -191,6 +205,7 @@ const AdminDashboard = () => {
                                                         active={client.isActive}
                                                         onActivate={(e) => { e.stopPropagation(); handleActivate(client.id); }}
                                                         onSuspend={(e) => { e.stopPropagation(); handleSuspend(client.id); }}
+                                                        onChangePassword={(e) => { e.stopPropagation(); handleChangePassword(client.user.id); }}
                                                         onDelete={(e) => { e.stopPropagation(); handleDeleteUser(client.user.id); }}
                                                     />
                                                 </td>
@@ -296,7 +311,7 @@ const StatBox = ({ icon, label, value, color }) => {
     );
 };
 
-const ActionButtons = ({ active, onActivate, onSuspend, onDelete, mobile }) => (
+const ActionButtons = ({ active, onActivate, onSuspend, onChangePassword, onDelete, mobile }) => (
     <div className={`flex gap-3 ${mobile ? 'w-full flex-wrap' : ''}`}>
         {!active ? (
             <button
@@ -313,6 +328,13 @@ const ActionButtons = ({ active, onActivate, onSuspend, onDelete, mobile }) => (
                 Suspender
             </button>
         )}
+        <button
+            onClick={onChangePassword}
+            className={`rounded-xl md:rounded-2xl bg-white/5 border border-white/10 hover:border-brand-500/50 hover:text-brand-400 flex items-center justify-center transition-all ${!mobile ? 'h-11 w-11' : 'h-14 w-14'}`}
+            title="Cambiar Contraseña"
+        >
+            <Key size={16} />
+        </button>
         <button
             onClick={onDelete}
             className={`rounded-xl md:rounded-2xl bg-white/5 border border-white/10 hover:border-red-500/50 hover:text-red-400 flex items-center justify-center transition-all ${!mobile ? 'h-11 w-11' : 'h-14 w-14'}`}

@@ -144,4 +144,25 @@ router.delete('/users/:id', async (req, res) => {
     }
 });
 
+// Cambiar contraseña de un usuario por el admin
+router.post('/change-password', async (req, res) => {
+    try {
+        const { userId, newPassword } = req.body;
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        await prisma.user.update({
+            where: { id: userId },
+            data: {
+                password: hashedPassword,
+                resetPasswordToken: null,
+                resetPasswordExpires: null
+            }
+        });
+
+        res.json({ message: 'Contraseña actualizada con éxito por el administrador' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 module.exports = router;

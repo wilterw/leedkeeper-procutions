@@ -30,7 +30,10 @@ const Register = () => {
             });
             navigate('/dashboard');
         } catch (error) {
-            const errorMsg = error.response?.data?.error || error.response?.data?.message || 'Error al crear la cuenta';
+            console.error('DEBUG REGISTRO:', error);
+            const status = error.response?.status;
+            const errorBody = error.response?.data?.error || error.response?.data?.message;
+            const errorMsg = errorBody ? `${errorBody} (Cód: ${status})` : 'Error de Conexión: Verifica tu internet o el estado del servidor.';
             toast.error(errorMsg);
         } finally {
             setLoading(false);
