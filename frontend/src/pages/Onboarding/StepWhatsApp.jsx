@@ -16,7 +16,7 @@ import { useAuth } from '../../context/AuthContext';
 import api from '../../services/api';
 import toast from 'react-hot-toast';
 
-const StepWhatsApp = () => {
+const StepWhatsApp = ({ onNext }) => {
     const { user } = useAuth();
     const [qr, setQr] = useState('');
     const [status, setStatus] = useState('DISCONNECTED'); // DISCONNECTED, CONNECTING, CONNECTED, ERROR
@@ -69,7 +69,7 @@ const StepWhatsApp = () => {
                     icon: '✅',
                     style: { borderRadius: '1rem', background: '#1e293b', color: '#fff' }
                 });
-                setTimeout(() => navigate('/dashboard'), 2000);
+                setTimeout(() => onNext(), 2000);
             }
         } catch (error) {
             console.error('Status check error:', error);
