@@ -15,10 +15,14 @@ router.post('/connect', async (req, res) => {
         if (!inmo) return res.status(404).json({ error: 'Inmobiliaria no encontrada' });
 
         // 1. Nombre dinámico y ultra-simplificado
+        console.log(`[Step 1] Datos Inmo: Name="${inmo.name}", Company="${inmo.companyName}"`);
         let instanceName = inmo.evolutionInstanceName;
 
         if (!instanceName) {
-            if (inmo.companyName === 'Econos' || inmo.name.includes('MH')) {
+            const isMH = inmo.name?.toUpperCase().includes('MH') || inmo.companyName?.toUpperCase().includes('MH');
+            const isEconos = inmo.name?.toUpperCase().includes('ECONOS') || inmo.companyName?.toUpperCase().includes('ECONOS');
+
+            if (isMH || isEconos) {
                 instanceName = 'lk_mh_office';
             } else {
                 const cleanName = (inmo.companyName || inmo.name || 'user')
