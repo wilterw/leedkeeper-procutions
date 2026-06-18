@@ -46,7 +46,11 @@ const StepWhatsApp = ({ onNext }) => {
             const response = await api.post('/whatsapp/connect', {
                 inmobiliariaId: user.inmobiliariaId
             });
-            if (response.data.qrcode) {
+            if (response.data.status === 'CONNECTED') {
+                setStatus('CONNECTED');
+                toast.success('WhatsApp ya está vinculado');
+                setTimeout(() => onNext(), 1500);
+            } else if (response.data.qrcode) {
                 setQr(response.data.qrcode);
                 setInstanceName(response.data.instanceName);
             }

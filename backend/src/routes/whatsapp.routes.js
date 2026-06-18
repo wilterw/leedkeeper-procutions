@@ -18,7 +18,22 @@ router.post('/connect', async (req, res) => {
         const instanceName = inmo.evolutionInstanceName || 'lk_mh_office';
         console.log(`[Step 1] Iniciando orquestación para: ${instanceName}`);
 
-        // 2. Orquestación EvolutionAPI (Crear si no existe)
+        // 2. Verificar si YA está conectada
+        try {
+            const status = await evolutionService.connectionState(instanceName);
+            if (status.instance?.state === 'open') {
+                console.log(`[Step 1] Instancia ${instanceName} ya está conectada. Saltando QR.`);
+                return res.json({
+                    status: 'CONNECTED',
+                    instanceName,
+                    chatwootInboxId: inmo.chatwootInboxId
+                });
+            }
+        } catch (e) {
+            console.log(`[Step 1] No se pudo verificar estado previo (probablemente no existe), procediendo a crear.`);
+        }
+
+        // 3. Orquestación EvolutionAPI (Crear si no existe)
         try {
             console.log(`[Step 1] Intentando crear instancia en Evolution: ${instanceName}`);
             await evolutionService.createInstance(instanceName);

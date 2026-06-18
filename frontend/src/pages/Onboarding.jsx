@@ -49,7 +49,11 @@ const Onboarding = () => {
                     ></motion.div>
 
                     {steps.map((s, i) => (
-                        <div key={i} className="relative z-10 flex flex-col items-center group">
+                        <div
+                            key={i}
+                            onClick={() => setStep(i + 1)}
+                            className="relative z-10 flex flex-col items-center group cursor-pointer"
+                        >
                             <motion.div
                                 animate={{
                                     scale: step === i + 1 ? 1.1 : 1,
