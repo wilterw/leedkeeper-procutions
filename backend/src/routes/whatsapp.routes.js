@@ -16,23 +16,29 @@ router.post('/connect', async (req, res) => {
 
         // 1. Nombre único para la instancia
         const instanceName = inmo.evolutionInstanceName || `lk_${inmo.id.slice(0, 8)}_${inmo.companyName.toLowerCase().replace(/\s+/g, '_')}`;
+        console.log(`[Step 1] Iniciando orquestación para: ${instanceName}`);
 
         // 2. Orquestación EvolutionAPI (Crear si no existe)
         try {
+            console.log(`[Step 1] Intentando crear instancia en Evolution: ${instanceName}`);
             await evolutionService.createInstance(instanceName);
+            console.log(`[Step 1] Instancia Evolution lista o ya existente`);
         } catch (e) {
-            console.log('Instance already exists or creation failed, continuing...');
+            console.error(`[Step 1] Falló creación en Evolution: ${e.message}`);
         }
 
         // 3. Orquestación Chatwoot (Crear Inbox si no existe)
         let chatwootInboxId = inmo.chatwootInboxId;
         if (!chatwootInboxId) {
             try {
+                console.log(`[Step 1] Creando Inbox en Chatwoot para: ${inmo.companyName}`);
                 const inboxName = `WA - ${inmo.companyName}`;
                 const inbox = await chatwootService.createInbox(inboxName);
                 chatwootInboxId = inbox.id.toString();
+                console.log(`[Step 1] Inbox Chatwoot creado: ${chatwootInboxId}`);
 
                 // 4. VINCULACIÓN: Configurar Chatwoot en la instancia de Evolution
+                console.log(`[Step 1] Vinculando Evolution con Chatwoot (Inbox: ${chatwootInboxId})`);
                 await evolutionService.setChatwoot(
                     instanceName,
                     process.env.CHATWOOT_URL,
@@ -40,6 +46,7 @@ router.post('/connect', async (req, res) => {
                     process.env.CHATWOOT_ACCOUNT_ID,
                     chatwootInboxId
                 );
+                console.log(`[Step 1] Vinculación exitosa`);
 
                 // Guardamos la configuración en la base de datos
                 await prisma.inmobiliaria.update({
@@ -50,13 +57,17 @@ router.post('/connect', async (req, res) => {
                         evolutionInstanceName: instanceName
                     }
                 });
+                console.log(`[Step 1] DB actualizada con datos de Chatwoot`);
             } catch (cwError) {
-                console.error('⚠️ Falló la orquestación con Chatwoot:', cwError.message);
+                console.error('⚠️ [Step 1] Falló la orquestación con Chatwoot:', cwError.message);
+                // No lanzamos error aquí para intentar al menos mostrar el QR de Evolution
             }
         }
 
-        // 5. Obtener el QR final de la instancia vinculada
+        // 5. Obtener el QR final
+        console.log(`[Step 1] Solicitando QR a Evolution para: ${instanceName}`);
         const qrResponse = await evolutionService.getQRCode(instanceName);
+        console.log(`[Step 1] QR recibido con éxito`);
 
         res.json({
             qrcode: qrResponse.base64 || qrResponse.code || qrResponse.qrcode,
