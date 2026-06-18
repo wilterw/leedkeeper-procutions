@@ -23,8 +23,7 @@ const chatwootService = {
             const response = await api.post(`/api/v1/accounts/${CHATWOOT_ACCOUNT_ID}/inboxes`, {
                 name: name,
                 channel: {
-                    type: 'web_widget', // Usamos web_widget o API channel para simular la conexión
-                    website_url: 'leadkeeper.io'
+                    type: 'api'
                 }
             });
             return response.data;

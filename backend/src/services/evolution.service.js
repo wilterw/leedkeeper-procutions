@@ -33,6 +33,28 @@ const evolutionService = {
     },
 
     /**
+     * Vincula la instancia de Evolution con Chatwoot
+     */
+    async setChatwoot(instanceName, chatwootUrl, chatwootToken, accountId, inboxId) {
+        try {
+            const response = await api.post(`/chatwoot/set/${instanceName}`, {
+                enabled: true,
+                url: chatwootUrl,
+                token: chatwootToken,
+                accountId: accountId,
+                inboxId: inboxId,
+                signMsg: true,
+                reopenConversation: true,
+                importMessages: true
+            });
+            return response.data;
+        } catch (error) {
+            console.error('❌ Error EvolutionAPI (setChatwoot):', error.response?.status);
+            throw error;
+        }
+    },
+
+    /**
      * Obtiene el código QR para conectar WhatsApp
      */
     async getQRCode(instanceName) {

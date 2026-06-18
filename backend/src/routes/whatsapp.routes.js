@@ -15,54 +15,52 @@ router.post('/connect', async (req, res) => {
         if (!inmo) return res.status(404).json({ error: 'Inmobiliaria no encontrada' });
 
         // 1. Nombre único para la instancia
-        const instanceName = `lk_${inmobiliariaId.split('-')[0]}_${inmo.companyName.toLowerCase().replace(/\s+/g, '_')}`;
+        const instanceName = inmo.evolutionInstanceName || `lk_${inmo.id.slice(0, 8)}_${inmo.companyName.toLowerCase().replace(/\s+/g, '_')}`;
 
-        // 2. Orquestación EvolutionAPI
-        let instance;
+        // 2. Orquestación EvolutionAPI (Crear si no existe)
         try {
-            instance = await evolutionService.createInstance(instanceName);
+            await evolutionService.createInstance(instanceName);
         } catch (e) {
-            // Si ya existe, simplemente obtenemos el nombre
-            instance = { instanceName };
+            console.log('Instance already exists or creation failed, continuing...');
         }
 
-        // 3. Orquestación Chatwoot (Si no tiene cuenta asignada)
-        let chatwootAccount = inmo.chatwootAccountId;
-        if (!chatwootAccount) {
-            // Aquí iría la lógica de crear cuenta en Chatwoot si se usa una instancia multi-account
-            // Por ahora usamos la del .env pero preparamos el guardado
-            chatwootAccount = process.env.CHATWOOT_ACCOUNT_ID;
-        }
-
+        // 3. Orquestación Chatwoot (Crear Inbox si no existe)
         let chatwootInboxId = inmo.chatwootInboxId;
         if (!chatwootInboxId) {
             try {
-                const inboxName = `LK - ${inmo.companyName}`;
+                const inboxName = `WA - ${inmo.companyName}`;
                 const inbox = await chatwootService.createInbox(inboxName);
                 chatwootInboxId = inbox.id.toString();
+
+                // 4. VINCULACIÓN: Configurar Chatwoot en la instancia de Evolution
+                await evolutionService.setChatwoot(
+                    instanceName,
+                    process.env.CHATWOOT_URL,
+                    process.env.CHATWOOT_TOKEN,
+                    process.env.CHATWOOT_ACCOUNT_ID,
+                    chatwootInboxId
+                );
 
                 // Guardamos la configuración en la base de datos
                 await prisma.inmobiliaria.update({
                     where: { id: inmobiliariaId },
                     data: {
-                        chatwootAccountId: chatwootAccount,
+                        chatwootAccountId: process.env.CHATWOOT_ACCOUNT_ID,
                         chatwootInboxId: chatwootInboxId,
                         evolutionInstanceName: instanceName
                     }
                 });
             } catch (cwError) {
-                console.error('⚠️ Advertencia: Falló la creación del Inbox en Chatwoot, continuando con QR de WhatsApp...', cwError.message);
-                // No lanzamos el error para permitir que se vea el QR
+                console.error('⚠️ Falló la orquestación con Chatwoot:', cwError.message);
             }
         }
 
-        // 4. Obtener el QR final de la instancia vinculada
+        // 5. Obtener el QR final de la instancia vinculada
         const qrResponse = await evolutionService.getQRCode(instanceName);
 
         res.json({
             qrcode: qrResponse.base64 || qrResponse.code || qrResponse.qrcode,
             instanceName,
-            chatwootAccountId: chatwootAccount,
             chatwootInboxId: chatwootInboxId
         });
 

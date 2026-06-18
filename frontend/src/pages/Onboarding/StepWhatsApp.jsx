@@ -12,28 +12,43 @@ import {
     Check
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
 const StepWhatsApp = () => {
+    const { user } = useAuth();
     const [qr, setQr] = useState('');
     const [status, setStatus] = useState('DISCONNECTED'); // DISCONNECTED, CONNECTING, CONNECTED, ERROR
     const [loading, setLoading] = useState(false);
+    const [instanceName, setInstanceName] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetchQr();
-        const interval = setInterval(checkStatus, 5000);
+        if (user?.inmobiliariaId) {
+            fetchQr();
+        }
+    }, [user]);
+
+    useEffect(() => {
+        let interval;
+        if (instanceName) {
+            interval = setInterval(checkStatus, 5000);
+        }
         return () => clearInterval(interval);
-    }, []);
+    }, [instanceName]);
 
     const fetchQr = async () => {
+        if (!user?.inmobiliariaId) return;
         setLoading(true);
         setStatus('CONNECTING');
         try {
-            const response = await axios.post(`${import.meta.env.VITE_API_URL}/whatsapp/connect`);
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/whatsapp/connect`, {
+                inmobiliariaId: user.inmobiliariaId
+            });
             if (response.data.qrcode) {
                 setQr(response.data.qrcode);
+                setInstanceName(response.data.instanceName);
             }
         } catch (error) {
             console.error('Error fetching QR:', error);
@@ -45,9 +60,10 @@ const StepWhatsApp = () => {
     };
 
     const checkStatus = async () => {
+        if (!instanceName) return;
         try {
-            const response = await axios.get(`${import.meta.env.VITE_API_URL}/whatsapp/status`);
-            if (response.data.status === 'CONNECTED') {
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/whatsapp/status/${instanceName}`);
+            if (response.data.instance?.state === 'open' || response.data.status === 'CONNECTED') {
                 setStatus('CONNECTED');
                 toast.success('¡WhatsApp Conectado!', {
                     icon: '✅',
