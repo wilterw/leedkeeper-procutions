@@ -10,6 +10,7 @@ const authMiddleware = async (req, res, next) => {
     const authHeader = req.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        console.log('⚠️ [Auth] Token faltante o mal dormado:', authHeader);
         return res.status(401).json({ error: 'Token no proporcionado' });
     }
 
@@ -29,6 +30,7 @@ const authMiddleware = async (req, res, next) => {
         req.user = user;
         next();
     } catch (error) {
+        console.error('⚠️ [Auth] Fallo al verificar token:', error.message);
         return res.status(401).json({ error: 'Token inválido o expirado' });
     }
 };
