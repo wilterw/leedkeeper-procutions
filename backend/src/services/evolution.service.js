@@ -62,6 +62,8 @@ const evolutionService = {
      */
     async getQRCode(instanceName) {
         try {
+            // Un pequeño respiro para que Evolution procese la instancia nueva
+            await new Promise(resolve => setTimeout(resolve, 1500));
             const response = await api.get(`/instance/connect/${instanceName}`);
             return response.data;
         } catch (error) {

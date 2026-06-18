@@ -18,15 +18,30 @@ router.post('/connect', async (req, res) => {
         let instanceName = inmo.evolutionInstanceName;
 
         if (!instanceName) {
-            const cleanName = (inmo.companyName || inmo.name || 'user')
-                .toLowerCase()
-                .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // Quitar tildes
-                .replace(/[^a-z0-9]/g, ""); // Quitar todo lo que no sea letra o numero
-
-            instanceName = `lk${cleanName}`;
+            if (inmo.companyName === 'Econos' || inmo.name.includes('MH')) {
+                instanceName = 'lk_mh_office';
+            } else {
+                const cleanName = (inmo.companyName || inmo.name || 'user')
+                    .toLowerCase()
+                    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+                    .replace(/[^a-z0-9]/g, "");
+                instanceName = `lk${cleanName}`;
+            }
         }
 
-        console.log(`[Step 1] Iniciando orquestación para: ${instanceName}`);
+        console.log(`[Step 1] Orquestación para: ${instanceName}`);
+
+        // 2. Intentar obtener el QR directamente (Saltando la creación si ya sabemos que existe)
+        try {
+            const qrResponse = await evolutionService.getQRCode(instanceName);
+            return res.json({
+                qrcode: qrResponse.base64 || qrResponse.code || qrResponse.qrcode,
+                instanceName,
+                chatwootInboxId: inmo.chatwootInboxId
+            });
+        } catch (e) {
+            console.log(`[Step 1] La instancia no parece activa, intentando crear/reconfigurar...`);
+        }
 
         // 2. Verificar si YA está conectada
         try {
