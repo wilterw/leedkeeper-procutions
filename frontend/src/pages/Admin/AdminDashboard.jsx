@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../services/api';
-import { Users, CheckCircle, XCircle, Clock, Search, ShieldCheck, Activity, ArrowUpRight, Filter, Mail, Building2, User } from 'lucide-react';
+import { Users, CheckCircle, XCircle, Clock, Search, ShieldCheck, Activity, ArrowUpRight, Filter, Mail, Building2, User, LogOut } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 
@@ -97,10 +97,23 @@ const AdminDashboard = () => {
                     <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
                         <button
                             onClick={() => setShowCreateModal(true)}
-                            className="h-14 px-8 bg-indigo-600 rounded-2xl text-white font-black text-xs uppercase tracking-widest hover:bg-indigo-500 transition-all shadow-xl shadow-indigo-600/20 w-full sm:w-auto"
+                            className="h-14 px-8 bg-brand-600 rounded-2xl text-white font-black text-xs uppercase tracking-widest hover:bg-brand-500 transition-all shadow-xl shadow-brand-600/20 w-full sm:w-auto flex items-center justify-center gap-2"
                         >
+                            <Building2 size={16} />
                             Crear Nodo
                         </button>
+
+                        <button
+                            onClick={() => {
+                                localStorage.removeItem('token');
+                                window.location.href = '/login';
+                            }}
+                            className="h-14 px-8 bg-white/5 border border-white/10 rounded-2xl text-red-500 font-black text-xs uppercase tracking-widest hover:bg-red-500/10 transition-all w-full sm:w-auto flex items-center justify-center gap-2"
+                        >
+                            <LogOut size={16} />
+                            Cerrar Sesión
+                        </button>
+
                         <div className="relative w-full sm:w-80">
                             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
                             <input
