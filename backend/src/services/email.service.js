@@ -116,8 +116,44 @@ const sendActivationEmail = async (email, name) => {
     }
 };
 
+const sendSuspensionEmail = async (email, name) => {
+    try {
+        const mailOptions = {
+            from: `"Lead Keeper IA" <${process.env.EMAIL_USER}>`,
+            to: email,
+            subject: 'Notificación Importante: Cuenta Suspendida - Lead Keeper',
+            html: `
+                <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #eee; border-radius: 10px; background-color: #fffaf0;">
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <h2 style="color: #c53030; margin: 0;">Aviso de Suspensión</h2>
+                    </div>
+                    <p>Hola, <strong>${name}</strong>.</p>
+                    <p>Te informamos que tu acceso a Lead Keeper ha sido <strong>suspendido temporalmente</strong>.</p>
+                    <div style="background-color: #fff; border: 1px solid #feb2b2; padding: 20px; border-radius: 8px; margin: 25px 0;">
+                        <p style="margin: 0; color: #444; font-size: 14px; line-height: 1.6;">
+                            Tu configuración, agentes IA e inventarios se mantienen guardados de forma segura, pero el procesamiento de mensajes y el acceso al panel han sido desactivados.
+                        </p>
+                    </div>
+                    <p style="font-weight: bold; color: #2d3748;">¿Qué debo hacer?</p>
+                    <p>Para reactivar tus servicios, por favor ponte en contacto con tu <strong>Ejecutivo de Ventas</strong> o responde a este correo para que podamos ayudarte.</p>
+                    <hr style="border: none; border-top: 1px solid #eee; margin: 25px 0;">
+                    <p style="font-size: 11px; color: #999; text-align: center;">Lead Keeper Infraestructure Management</p>
+                </div>
+            `,
+        };
+
+        if (process.env.EMAIL_USER) {
+            await transporter.sendMail(mailOptions);
+            console.log(`✅ Correo de suspensión enviado a: ${email}`);
+        }
+    } catch (error) {
+        console.error('❌ Error enviando correo de suspensión:', error);
+    }
+};
+
 module.exports = {
     sendWelcomeEmail,
     sendResetPasswordEmail,
-    sendActivationEmail
+    sendActivationEmail,
+    sendSuspensionEmail
 };

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { PrismaClient } = require('@prisma/client');
 const bcrypt = require('bcrypt');
-const { sendActivationEmail } = require('../services/email.service');
+const { sendActivationEmail, sendSuspensionEmail } = require('../services/email.service');
 const prisma = new PrismaClient();
 
 // Middleware para verificar si es ADMIN
@@ -85,6 +85,16 @@ router.post('/suspend', async (req, res) => {
             where: { id: inmobiliariaId },
             data: { isActive: false }
         });
+
+        // 📧 Enviar correo de suspensión
+        const inmoWithUser = await prisma.inmobiliaria.findUnique({
+            where: { id: inmobiliariaId },
+            include: { user: true }
+        });
+
+        if (inmoWithUser && inmoWithUser.user) {
+            sendSuspensionEmail(inmoWithUser.user.email, inmoWithUser.user.name);
+        }
 
         res.json({ message: 'Inmobiliaria suspendida', updated });
     } catch (error) {
