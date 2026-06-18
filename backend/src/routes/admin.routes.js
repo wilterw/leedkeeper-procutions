@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { PrismaClient } = require('@prisma/client');
 const bcrypt = require('bcrypt');
+const { sendActivationEmail } = require('../services/email.service');
 const prisma = new PrismaClient();
 
 // Middleware para verificar si es ADMIN
@@ -58,6 +59,16 @@ router.post('/activate', async (req, res) => {
         automationService.setupClientInfrastructure(inmobiliariaId).catch(err => {
             console.error('Fallo diferido en automatización:', err);
         });
+
+        // 📧 Enviar correo de notificación al usuario
+        const inmoWithUser = await prisma.inmobiliaria.findUnique({
+            where: { id: inmobiliariaId },
+            include: { user: true }
+        });
+
+        if (inmoWithUser && inmoWithUser.user) {
+            sendActivationEmail(inmoWithUser.user.email, inmoWithUser.user.name);
+        }
 
         res.json({ message: 'Inmobiliaria activada e infraestructura en proceso de despliegue', updated });
     } catch (error) {
