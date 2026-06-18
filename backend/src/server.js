@@ -70,6 +70,26 @@ app.use((err, req, res, next) => {
     res.status(500).json({ error: 'Internal Server Error', message: err.message });
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
     console.log(`🚀 Lead Keeper Backend running on http://localhost:${PORT}`);
+
+    // 🛡️ Asegurar Super Admin en el arranque
+    try {
+        const adminEmail = 'admin@econos.io';
+        const hashedPassword = await bcrypt.hash('SML123456', 10);
+
+        await prisma.user.upsert({
+            where: { email: adminEmail },
+            update: {}, // No sobreescribir si ya existe
+            create: {
+                email: adminEmail,
+                password: hashedPassword,
+                name: 'Super Admin',
+                role: 'ADMIN'
+            }
+        });
+        console.log('🛡️ Verificación de Super Admin completada');
+    } catch (e) {
+        console.error('❌ Error verificando Super Admin:', e.message);
+    }
 });
