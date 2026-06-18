@@ -14,8 +14,18 @@ router.post('/connect', async (req, res) => {
 
         if (!inmo) return res.status(404).json({ error: 'Inmobiliaria no encontrada' });
 
-        // 1. Nombre único para la instancia (Apuntando a la manual creada por el usuario)
-        const instanceName = inmo.evolutionInstanceName || 'lk_mh_office';
+        // 1. Nombre dinámico y ultra-simplificado
+        let instanceName = inmo.evolutionInstanceName;
+
+        if (!instanceName) {
+            const cleanName = (inmo.companyName || inmo.name || 'user')
+                .toLowerCase()
+                .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // Quitar tildes
+                .replace(/[^a-z0-9]/g, ""); // Quitar todo lo que no sea letra o numero
+
+            instanceName = `lk${cleanName}`;
+        }
+
         console.log(`[Step 1] Iniciando orquestación para: ${instanceName}`);
 
         // 2. Verificar si YA está conectada
