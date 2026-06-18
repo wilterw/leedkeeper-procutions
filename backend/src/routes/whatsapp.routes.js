@@ -14,8 +14,8 @@ router.post('/connect', async (req, res) => {
 
         if (!inmo) return res.status(404).json({ error: 'Inmobiliaria no encontrada' });
 
-        // 1. Nombre único para la instancia (Simplificado)
-        const instanceName = inmo.evolutionInstanceName || `lk_${inmo.id.slice(0, 4)}_${(inmo.companyName || inmo.name || 'inmo').toLowerCase().replace(/\s+/g, '').slice(0, 5)}`;
+        // 1. Nombre único para la instancia (Apuntando a la manual creada por el usuario)
+        const instanceName = inmo.evolutionInstanceName || 'lk_mh_office';
         console.log(`[Step 1] Iniciando orquestación para: ${instanceName}`);
 
         // 2. Orquestación EvolutionAPI (Crear si no existe)
