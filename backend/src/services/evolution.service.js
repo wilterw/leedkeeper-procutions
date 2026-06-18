@@ -21,9 +21,7 @@ const evolutionService = {
         try {
             console.log(`📡 Solicitando creación de instancia: ${instanceName} en ${EVOLUTION_URL}`);
             const response = await api.post('/instance/create', {
-                instanceName: instanceName,
-                token: '',
-                qrcode: true
+                instanceName: instanceName
             });
             return response.data;
         } catch (error) {
