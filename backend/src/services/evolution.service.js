@@ -22,7 +22,8 @@ const evolutionService = {
             const response = await api.post('/instance/create', {
                 instanceName: instanceName,
                 token: `tk_${Math.random().toString(36).substring(7)}`,
-                qrcode: true
+                qrcode: true,
+                integration: 'WHATSAPP'
             });
             return response.data;
         } catch (error) {
