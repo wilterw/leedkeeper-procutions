@@ -29,7 +29,8 @@ const Login = () => {
             if (user.role === 'ADMIN') navigate('/admin');
             else navigate('/dashboard');
         } catch (error) {
-            toast.error(error.response?.data?.message || 'Credenciales incorrectas');
+            const errorMsg = error.response?.data?.error || error.response?.data?.message || 'Credenciales incorrectas';
+            toast.error(errorMsg);
         } finally {
             setLoading(false);
         }
@@ -41,7 +42,7 @@ const Login = () => {
             <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-brand-600/10 blur-[120px] rounded-full animate-glow" />
             <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-accent-600/5 blur-[120px] rounded-full animate-glow" />
 
-            <div className="w-full max-w-md relative">
+            <div className="w-full max-w-md relative pt-32 z-10">
                 <div className="glass-card p-10 shadow-2xl relative overflow-hidden group">
                     {/* Top accent line */}
                     <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-brand-500 to-transparent opacity-50" />
@@ -63,7 +64,7 @@ const Login = () => {
                                 Correo Electrónico
                             </label>
                             <div className="relative group">
-                                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none group-focus-within:text-brand-400 text-slate-500 transition-colors">
+                                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none group-focus-within:text-brand-400 text-slate-500 transition-colors z-20">
                                     <Mail size={18} />
                                 </div>
                                 <input
@@ -82,7 +83,7 @@ const Login = () => {
                                 Contraseña
                             </label>
                             <div className="relative group">
-                                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none group-focus-within:text-brand-400 text-slate-500 transition-colors">
+                                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none group-focus-within:text-brand-400 text-slate-500 transition-colors z-20">
                                     <Lock size={18} />
                                 </div>
                                 <input

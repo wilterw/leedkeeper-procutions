@@ -30,19 +30,20 @@ const Register = () => {
             });
             navigate('/dashboard');
         } catch (error) {
-            toast.error(error.response?.data?.message || 'Error al crear la cuenta');
+            const errorMsg = error.response?.data?.error || error.response?.data?.message || 'Error al crear la cuenta';
+            toast.error(errorMsg);
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden">
+        <div className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden pt-32">
             {/* Background Decor */}
             <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-accent-600/10 blur-[120px] rounded-full animate-glow" />
             <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-brand-600/5 blur-[120px] rounded-full animate-glow" />
 
-            <div className="w-full max-w-md relative">
+            <div className="w-full max-w-md relative z-10">
                 <div className="glass-card p-10 shadow-2xl relative overflow-hidden group">
                     <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-accent-500 to-transparent opacity-50" />
 
@@ -60,7 +61,7 @@ const Register = () => {
                         <div className="space-y-2">
                             <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider ml-1">Nombre Inmobiliaria</label>
                             <div className="relative group">
-                                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none group-focus-within:text-accent-400 text-slate-500 transition-colors">
+                                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none group-focus-within:text-accent-400 text-slate-500 transition-colors z-20">
                                     <User size={18} />
                                 </div>
                                 <input
@@ -77,7 +78,7 @@ const Register = () => {
                         <div className="space-y-2">
                             <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider ml-1">Correo Profesional</label>
                             <div className="relative group">
-                                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none group-focus-within:text-accent-400 text-slate-500 transition-colors">
+                                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none group-focus-within:text-accent-400 text-slate-500 transition-colors z-20">
                                     <Mail size={18} />
                                 </div>
                                 <input
@@ -94,7 +95,7 @@ const Register = () => {
                         <div className="space-y-2">
                             <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider ml-1">Contraseña Segura</label>
                             <div className="relative group">
-                                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none group-focus-within:text-accent-400 text-slate-500 transition-colors">
+                                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none group-focus-within:text-accent-400 text-slate-500 transition-colors z-20">
                                     <Lock size={18} />
                                 </div>
                                 <input
