@@ -9,11 +9,28 @@ import StepTraining from './Onboarding/StepTraining';
 import StepTeam from './Onboarding/StepTeam';
 
 const Onboarding = () => {
-    const [step, setStep] = useState(1);
+    const [step, setStep] = useState(() => {
+        const saved = localStorage.getItem('onboarding_step');
+        return saved ? parseInt(saved) : 1;
+    });
     const { user } = useAuth();
 
-    const nextStep = () => setStep(prev => prev + 1);
-    const prevStep = () => setStep(prev => prev - 1);
+    const nextStep = () => {
+        const next = step + 1;
+        setStep(next);
+        localStorage.setItem('onboarding_step', next);
+    };
+
+    const prevStep = () => {
+        const prev = step - 1;
+        setStep(prev);
+        localStorage.setItem('onboarding_step', prev);
+    };
+
+    const goToStep = (s) => {
+        setStep(s);
+        localStorage.setItem('onboarding_step', s);
+    };
 
     const steps = [
         { title: 'WhatsApp', icon: <MessageSquare size={18} /> },
@@ -51,7 +68,7 @@ const Onboarding = () => {
                     {steps.map((s, i) => (
                         <div
                             key={i}
-                            onClick={() => setStep(i + 1)}
+                            onClick={() => goToStep(i + 1)}
                             className="relative z-10 flex flex-col items-center group cursor-pointer"
                         >
                             <motion.div
