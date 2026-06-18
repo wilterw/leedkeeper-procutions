@@ -228,7 +228,62 @@ const AdminDashboard = () => {
                         </table>
                     </div>
 
+                    {/* Mobile Card View */}
+                    <div className="lg:hidden divide-y divide-white/5">
+                        {loading ? (
+                            <div className="px-6 py-20 text-center text-slate-500 font-bold uppercase tracking-widest text-xs">Scanning systems...</div>
+                        ) : filteredClients.length === 0 ? (
+                            <div className="px-6 py-20 text-center text-slate-500 font-bold uppercase tracking-widest text-xs">Sin resultados</div>
+                        ) : filteredClients.map(client => (
+                            <motion.div
+                                key={client.id}
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                className="p-5 space-y-4"
+                            >
+                                {/* Client header */}
+                                <div className="flex items-center gap-4">
+                                    <div className={`w-3 h-3 rounded-full shrink-0 ${client.isActive ? 'bg-emerald-400 shadow-[0_0_10px_#10b981]' : 'bg-amber-400 shadow-[0_0_10px_#f59e0b] animate-pulse'}`}></div>
+                                    <div className="min-w-0 flex-1">
+                                        <div className="font-bold text-base text-white uppercase italic truncate">{client.companyName}</div>
+                                        <div className="text-[10px] font-mono text-slate-600 uppercase tracking-tighter">ID: {client.id.split('-')[0]}</div>
+                                    </div>
+                                    <div className="text-right shrink-0">
+                                        <div className="text-[9px] font-black text-indigo-500 uppercase tracking-widest italic">{client.planType}</div>
+                                    </div>
+                                </div>
+
+                                {/* Client details */}
+                                <div className="grid grid-cols-2 gap-3">
+                                    <div className="p-3 rounded-xl bg-white/[0.02] border border-white/5">
+                                        <div className="text-[9px] font-black uppercase tracking-widest text-slate-600 mb-1">Contacto</div>
+                                        <div className="text-sm font-bold text-slate-300 truncate">{client.user?.name}</div>
+                                        <div className="text-[10px] text-slate-500 truncate">{client.user?.email}</div>
+                                    </div>
+                                    <div className="p-3 rounded-xl bg-white/[0.02] border border-white/5">
+                                        <div className="text-[9px] font-black uppercase tracking-widest text-slate-600 mb-1">Vencimiento</div>
+                                        <div className="text-sm font-bold text-slate-300">
+                                            {client.expiresAt ? new Date(client.expiresAt).toLocaleDateString() : 'N/A'}
+                                        </div>
+                                        <div className="text-[10px] text-slate-500">{client.isActive ? 'Activo' : 'Inactivo'}</div>
+                                    </div>
+                                </div>
+
+                                {/* Actions */}
+                                <ActionButtons
+                                    mobile
+                                    active={client.isActive}
+                                    onActivate={() => handleActivate(client.id)}
+                                    onSuspend={() => handleSuspend(client.id)}
+                                    onChangePassword={() => handleChangePassword(client.user.id)}
+                                    onDelete={() => handleDeleteUser(client.user.id)}
+                                />
+                            </motion.div>
+                        ))}
+                    </div>
+
                 </div>
+
             </div>
 
             {/* Create Modal */}
