@@ -1,7 +1,10 @@
 import axios from 'axios';
 
-// En desarrollo usa localhost, en producción usa la variable de entorno
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+// En desarrollo usa localhost, en producción usa la url configurada o la detectada
+const API_URL = import.meta.env.VITE_API_URL ||
+    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'http://localhost:3000/api'
+        : 'https://leedkeeper-api.econos.io/api');
 
 const api = axios.create({
     baseURL: API_URL,

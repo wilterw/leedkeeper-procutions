@@ -24,7 +24,7 @@ app.use(helmet({
     contentSecurityPolicy: false
 }));
 app.use(cors({
-    origin: '*',
+    origin: ['https://leedkeeper.econos.io', 'http://localhost:5173', 'http://127.0.0.1:5173'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
@@ -33,7 +33,7 @@ app.use(morgan('dev'));
 app.use(express.json());
 
 // Routes
-app.get('/', async (req, res) => {
+const healthCheck = async (req, res) => {
     let dbStatus = 'UNKNOWN';
     try {
         await prisma.$queryRaw`SELECT 1`;
@@ -48,7 +48,10 @@ app.get('/', async (req, res) => {
         database: dbStatus,
         version: '1.0.0'
     });
-});
+};
+
+app.get('/', healthCheck);
+app.get('/api', healthCheck);
 
 // Rutas de la API
 
