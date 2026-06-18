@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import axios from 'axios';
+import api from '../../services/api';
 import toast from 'react-hot-toast';
 
 const StepWhatsApp = () => {
@@ -43,7 +43,7 @@ const StepWhatsApp = () => {
         setLoading(true);
         setStatus('CONNECTING');
         try {
-            const response = await axios.post(`${import.meta.env.VITE_API_URL}/whatsapp/connect`, {
+            const response = await api.post('/whatsapp/connect', {
                 inmobiliariaId: user.inmobiliariaId
             });
             if (response.data.qrcode) {
@@ -62,7 +62,7 @@ const StepWhatsApp = () => {
     const checkStatus = async () => {
         if (!instanceName) return;
         try {
-            const response = await axios.get(`${import.meta.env.VITE_API_URL}/whatsapp/status/${instanceName}`);
+            const response = await api.get(`/whatsapp/status/${instanceName}`);
             if (response.data.instance?.state === 'open' || response.data.status === 'CONNECTED') {
                 setStatus('CONNECTED');
                 toast.success('¡WhatsApp Conectado!', {
